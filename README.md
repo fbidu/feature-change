@@ -21,6 +21,15 @@ def current_function():
 
 ```
 
+---
+**Table of Contents**
+
+* [Usage](#usage)
+* [Defining the Logging Functions](#defining-the-logging-functions)
+* [Working Example](#working-example)
+* [Warnings](#warnings)
+* [Other Libs](#other-libs)
+
 A Python decorator that helps you run two different versions of a function at
 the same time and track differences _without_ breaking the current behavior.
 
@@ -29,12 +38,12 @@ for Node.js.
 
 ## Usage
 
-1. Install with pip or your favorite package manager `pip install feature-change`
+1. **Install** with pip or your favorite package manager `pip install feature-change`
 
     a. If you can't or don't want to add a new dependency, feel free to just
        copy the current code from `change.py`. It is pretty straightforward.
 
-2. Define the functions you want to be called. They will receive two keyword
+2. **Define the logging functions** you want to be called. They will receive two keyword
    arguments `current` and `new`, with the current and the new result.
 
     ```python
@@ -42,7 +51,7 @@ for Node.js.
         print(f"The current value is {current} but the new one is {new})
     ```
 
-3. Decorate your current function with `@change`, passing the new implementation
+3. **Decorate** your current function with `@change`, passing the new implementation
    that you want to test and any logging function you have defined. Currently
    you can define logging on two occasions ― `on_diff` will be called if the
    results are different and `on_call` will always be called
@@ -52,6 +61,82 @@ for Node.js.
     def current_function():
         ...
     ```
+
+## Defining the Logging Functions
+
+The functions used for logging will receive two keyword arguments ― `current`
+and `new`. They will contain the return of both the current and the new functions.
+
+`change` can call custom functions on two situations:
+
+* `on_call` ― everytime the old function is called
+
+* `on_diff` ― when there's a difference between the return of the current function
+  and the new one.
+
+## Working Example
+
+```python
+from random import random
+from feature_change import change
+
+def log_call(current, new):
+    print("Call detected!")
+
+def log_diff(current, new):
+    print(f"Difference detected. Current = {current}; new = {new}")
+
+def new_sum(a, b):
+    """
+    This function will be wrong on 50% of the calls
+    """
+    if random() > 0.5:
+        return 0
+
+    return a + b
+
+@change(new=new_sum, on_call=log_call, on_diff=log_diff)
+def current_sum(a, b):
+    return a + b
+
+for _ in range(10):
+    current_sum(1, 41)
+```
+
+This code will return something like
+
+```text
+Call detected!
+Difference detected. Current = 42; new = 0
+Call detected!
+Call detected!
+Call detected!
+Difference detected. Current = 42; new = 0
+Call detected!
+Call detected!
+Call detected!
+Call detected!
+Difference detected. Current = 42; new = 0
+Call detected!
+Call detected!
+Call detected!
+Difference detected. Current = 42; new = 0
+Call detected!
+Call detected!
+Call detected!
+Call detected!
+Call detected!
+Difference detected. Current = 42; new = 0
+Call detected!
+Difference detected. Current = 42; new = 0
+Call detected!
+Difference detected. Current = 42; new = 0
+Call detected!
+Call detected!
+```
+
+Keep in mind that the result may be different in your machine because the
+new function fails randomly.
 
 ## Warnings
 
