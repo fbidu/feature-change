@@ -142,11 +142,11 @@ new function fails randomly.
 ## Warnings
 
 1. **Both functions will be called** ― be aware of side effects like database
-   writes. If both functions writes to a database, they will both be executed,
+   writes. If both functions write to a database, they will both be executed,
    leading to possible inconsistencies.
 
 2. **Be aware of slow logs** ― the callables you define for `on_diff` and `on_call`
-   should not be very expensive. You could, by example, just counti how many times
+   should not be very expensive. You could, by example, just count how many times
    `on_diff` was called using some fast db like redis.
 
 3. **Equality is simple** ― currently the results are checked using simply the
