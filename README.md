@@ -29,6 +29,7 @@ def current_function():
 * [Working Example](#working-example)
 * [Warnings](#warnings)
 * [Other Libs](#other-libs)
+---
 
 A Python decorator that helps you run two different versions of a function at
 the same time and track differences _without_ breaking the current behavior.
