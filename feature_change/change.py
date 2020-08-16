@@ -1,27 +1,31 @@
+"""
+Module for the main change decorator
+"""
 from functools import wraps
 
 
-def change(func, *, new, log):
+def change(new, on_diff=None, on_call=None):
+    """
+    Returns a decorator that will compare the result of a function
+    with the result of `new` and call `log` with the results.u
+    """
+
     def decorate(func):
         @wraps(func)
         def wrapper(*args, **kwargs):
             current_result = func(*args, **kwargs)
             new_result = new(*args, **kwargs)
-            log(f"current = {current_result}, new = {new_result}")
+
+            payload = {"current": current_result, "new": new_result}
+
+            if on_diff and current_result != new_result:
+                on_diff(**payload)
+
+            if on_call:
+                on_call(**payload)
+
             return current_result
 
         return wrapper
 
     return decorate
-
-
-# class change:
-#     def __init__(self, wrapped, *, new, log=None) -> None:
-#         self.wrapped = wrapped
-#         self.log = log
-#         self.new = new
-
-#     def __call__(self, *args, **kwargs):
-#         self.new()
-#         self.log()
-#         return self.wrapped(*args, **kwargs)

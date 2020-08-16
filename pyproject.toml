@@ -1,6 +1,6 @@
 [tool.poetry]
 authors = ["Felipe 'Bidu' Rodrigues <felipe@felipevr.com>"]
-description = "Feature Change is awesome"
+description = "Feature Change helps you check if a new function behaves like and older one"
 license = "MIT"
 name = "feature-change"
 version = "0.1.0"
