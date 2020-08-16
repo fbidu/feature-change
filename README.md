@@ -25,7 +25,7 @@ A Python decorator that helps you run two different versions of a function at
 the same time and track differences _without_ breaking the current behavior.
 
 It is based on Auth0's [feature-change](https://github.com/dschenkelman/feature-change)
-for Node.js.
+for Node.js. [Original article](https://auth0.com/blog/feature-changes-at-auth0/)
 
 ## Usage
 
